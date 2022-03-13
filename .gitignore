@@ -1,0 +1,7 @@
+.venv 
+.vscode
+__pycache__
+run.exe
+run_Watchlist.htk
+images
+videos
