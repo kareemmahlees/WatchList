@@ -22,12 +22,15 @@ class NotionClient:
     def monitor_the_database(self):
         while True:  # Event loop
             time.sleep(0.25)
-            res = requests.post(
-                f"https://api.notion.com/v1/databases/{self.database_id}/query",
-                headers=self.headers,
-            )
-            data_json = json.dumps(res.json())
-            data_dict = json.loads(data_json)
+            try:
+                res = requests.post(
+                    f"https://api.notion.com/v1/databases/{self.database_id}/query",
+                    headers=self.headers,
+                )
+                data_json = json.dumps(res.json())
+                data_dict = json.loads(data_json)
+            except json.decoder.JSONDecodeError:
+                continue
             for element in data_dict["results"]:
                 try:
                     scheme = element["properties"]["Name"]["title"][0]["text"][
@@ -66,7 +69,9 @@ class NotionClient:
                         "title": [
                             {
                                 "type": "text",
-                                "text": {"content": "Name Not Found , Try Again.."},
+                                "text": {
+                                    "content": f"{self.movie_name} : Name Not Found , Try Again.."
+                                },
                             }
                         ]
                     },
